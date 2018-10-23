@@ -39,23 +39,8 @@ set('default_stage', 'production');
 // Hosts
 inventory('hosts.yml');
 
-task('build', function () {
-    run('cd {{release_path}} && build');
-});
-
 //Not necessary now
  desc('Deploy the project');
- task('deploy', [
-     'deploy:prepare',
-     'deploy:lock',
-     'deploy:release',
-     'deploy:update_code',
-     'deploy:shared',
-     'artisan:cache:clear',
-     'artisan:config:cache',
-     'deploy:symlink',
-     'deploy:unlock',
- ]);
 
 // [Optional] if deploy fails automatically unlock.
 after('deploy:failed', 'deploy:unlock');
