@@ -99,7 +99,7 @@
                 </div>
             </div>
             <div class="row">
-                <input type="button" class="btn btn-danger" id="delete_property" value="Delete Property">
+                <input type="button" class="btn btn-danger" id="delete_property" value="Delete Selected Properties">
             </div>
         </section>
         <!-- end of main content-->
