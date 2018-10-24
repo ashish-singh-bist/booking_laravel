@@ -38,19 +38,16 @@ class HotelMasterController extends Controller
 
         $hotelmaster = new HotelMaster();
         if($request->get('id') != Null && $request->get('id') != ''){
-            $hotelmaster = $hotelmaster->where('hotel_id',$request->get('id'))->whereNotNull('prop_url');
+            $hotelmaster = $hotelmaster->where('hotel_id',$request->get('id'));
         }
         if(count($request->get('stars'))>0){
             $stars = $request->get('stars');
             $hotelmaster = $hotelmaster->where(function ($query) use ($stars) {
                 foreach($stars as $key => $star){
                     if($key == 0){
-                        $query = $query->where('hotel_stars', $star);
-                        $query = $query->whereNotNull('prop_url');
+                        $query = $query->where('hotel_stars',intval($star));
                     }else{
-
-                        $query = $query->orWhere('hotel_stars', $star);
-                        $query = $query->whereNotNull('prop_url');
+                        $query = $query->orWhere('hotel_stars', intval($star));
                     }
                 }
                 return $query;
@@ -58,19 +55,19 @@ class HotelMasterController extends Controller
         }
 
         if($request->get('min_rating')!= Null && $request->get('min_rating')!= ''){ 
-            $hotelmaster = $hotelmaster->where('booking_rating','>=', (double)$request->get('min_rating'))->whereNotNull('prop_url');
+            $hotelmaster = $hotelmaster->where('booking_rating','>=', (double)$request->get('min_rating'));
         }
 
         if($request->get('max_rating')!= Null && $request->get('max_rating')!= ''){
-            $hotelmaster = $hotelmaster->where('booking_rating','<=', (double)$request->get('max_rating'))->whereNotNull('prop_url');
+            $hotelmaster = $hotelmaster->where('booking_rating','<=', (double)$request->get('max_rating'));
         }
 
         if($request->get('created_at_from') != Null && $request->get('created_at_from') != ''){
-            $hotelmaster = $hotelmaster->where('created_at', '>=', Carbon::parse($request->get('created_at_from'))->startOfDay())->whereNotNull('prop_url');
+            $hotelmaster = $hotelmaster->where('created_at', '>=', Carbon::parse($request->get('created_at_from'))->startOfDay());
         }
 
         if($request->get('created_at_to') != Null && $request->get('created_at_to') != ''){
-            $hotelmaster = $hotelmaster->where('created_at', '<=', Carbon::parse($request->get('created_at_to'))->endOfDay())->whereNotNull('prop_url');
+            $hotelmaster = $hotelmaster->where('created_at', '<=', Carbon::parse($request->get('created_at_to'))->endOfDay());
         }
 
         if(count($request->get('countries'))>0){
@@ -79,10 +76,8 @@ class HotelMasterController extends Controller
                 foreach($countries as $key => $country){
                     if($key == 0){
                         $query = $query->where('country', $country);
-                        $query = $query->whereNotNull('prop_url');
                     }else{
                         $query = $query->orWhere('country', $country);
-                        $query = $query->whereNotNull('prop_url');
                     }
                 }
                 return $query;
@@ -95,10 +90,8 @@ class HotelMasterController extends Controller
                 foreach($cities as $key => $city){
                     if($key == 0){
                         $query = $query->where('city', $city);
-                        $query = $qurey->whereNotNull('prop_url');
                     }else{
                         $query = $query->orWhere('city', $city);
-                        $query= $query->whereNotNull('prop_url');
                     }
                 }
                 return $query;
@@ -111,10 +104,8 @@ class HotelMasterController extends Controller
                 foreach($categories as $key => $category){
                     if($key == 0){
                         $query = $query->where('hotel_category', $category);
-                        $query = $query->whereNotNull('prop_url');
                     }else{
                         $query = $query->orWhere('hotel_category', $category);
-                        $query = $query->whereNotNull('prop_url');
                     }
                 }
                 return $query;
@@ -124,12 +115,11 @@ class HotelMasterController extends Controller
         if($request->get('self_verified')!=Null && $request->get('self_verified')!=''){
             $is_verified = $request->get('self_verified');
             if($is_verified == '1'){
-                $hotelmaster = $hotelmaster->Where('self_verified','>',0)->whereNotNull('prop_url');
+                $hotelmaster = $hotelmaster->Where('self_verified','>',0);
             } else if($is_verified == '0'){
                 $hotelmaster = $hotelmaster->where(function ($query) {
                     $query = $query->whereNull('self_verified');
                     $query = $query->orWhere('self_verified','=',0);
-                    $query = $query->whereNotNull('prop_url');
                 });
             }
         }
@@ -137,12 +127,11 @@ class HotelMasterController extends Controller
         if($request->get('guest_favourite')!=Null && $request->get('guest_favourite')!=''){
             $is_favourite = $request->get('guest_favourite');
             if($is_favourite == '1'){
-                $hotelmaster = $hotelmaster->Where('guests_favorite_area','=',1)->whereNotNull('prop_url');
+                $hotelmaster = $hotelmaster->Where('guests_favorite_area','=',1);
             } else if($is_favourite == '0'){
                 $hotelmaster = $hotelmaster->where(function ($query) {
                     $query = $query->whereNull('guests_favorite_area');
                     $query = $query->orWhere('guests_favorite_area','=',0);
-                    $query = $query->whereNotNull('prop_url');
                 });
             }
         }
