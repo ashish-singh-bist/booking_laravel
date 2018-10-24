@@ -392,7 +392,7 @@ class HotelPricesController extends Controller
                     $row->hotel_category = $hotel_name_array[$data_obj['hotel_id']]['hotel_category'];
                     $row->hotel_stars = $hotel_name_array[$data_obj['hotel_id']]['hotel_stars'];
                     $row->location =  $hotel_name_array[$data_obj['hotel_id']]['location'];
-                    $row->booking_rating = $hotel_name_array[$data_obj['hotel_id']]['booking_rating'];
+                    $row->booking_rating = str_replace('.',',',$hotel_name_array[$data_obj['hotel_id']]['booking_rating']);
                     $row->guests_favorite_area = $hotel_name_array[$data_obj['hotel_id']]['guests_favorite_area'];
                     $row->self_verified = $hotel_name_array[$data_obj['hotel_id']]['self_verified'];
                     
@@ -499,7 +499,8 @@ class HotelPricesController extends Controller
             $data_obj['hotel_category'] = $hotel_name_array[$data_obj['hotel_id']]['hotel_category'];
             $data_obj['hotel_stars'] = $hotel_name_array[$data_obj['hotel_id']]['hotel_stars'];
             $data_obj['location'] = $hotel_name_array[$data_obj['hotel_id']]['location'];
-            $data_obj['booking_rating'] = $hotel_name_array[$data_obj['hotel_id']]['booking_rating'];
+            //$hotelmaster_data[$i]['booking_rating'] = str_replace('.',',', $hotelmaster_data[$i]['booking_rating']);
+            $data_obj['booking_rating'] = str_replace('.',',',$hotel_name_array[$data_obj['hotel_id']]['booking_rating']);
             $data_obj['guests_favorite_area'] = $hotel_name_array[$data_obj['hotel_id']]['guests_favorite_area'];
             $data_obj['self_verified'] = $hotel_name_array[$data_obj['hotel_id']]['self_verified'];
 

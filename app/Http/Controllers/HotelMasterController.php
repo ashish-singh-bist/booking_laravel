@@ -38,7 +38,7 @@ class HotelMasterController extends Controller
 
         $hotelmaster = new HotelMaster();
         if($request->get('id') != Null && $request->get('id') != ''){
-            $hotelmaster = $hotelmaster->where('hotel_id',$request->get('id'));
+            $hotelmaster = $hotelmaster->where('hotel_id',$request->get('id'))->whereNotNull('prop_url');
         }
         if(count($request->get('stars'))>0){
             $stars = $request->get('stars');
@@ -46,9 +46,11 @@ class HotelMasterController extends Controller
                 foreach($stars as $key => $star){
                     if($key == 0){
                         $query = $query->where('hotel_stars', $star);
+                        $query = $query->whereNotNull('prop_url');
                     }else{
 
                         $query = $query->orWhere('hotel_stars', $star);
+                        $query = $query->whereNotNull('prop_url');
                     }
                 }
                 return $query;
@@ -56,19 +58,19 @@ class HotelMasterController extends Controller
         }
 
         if($request->get('min_rating')!= Null && $request->get('min_rating')!= ''){ 
-            $hotelmaster = $hotelmaster->where('booking_rating','>=', (double)$request->get('min_rating'));
+            $hotelmaster = $hotelmaster->where('booking_rating','>=', (double)$request->get('min_rating'))->whereNotNull('prop_url');
         }
 
         if($request->get('max_rating')!= Null && $request->get('max_rating')!= ''){
-            $hotelmaster = $hotelmaster->where('booking_rating','<=', (double)$request->get('max_rating'));
+            $hotelmaster = $hotelmaster->where('booking_rating','<=', (double)$request->get('max_rating'))->whereNotNull('prop_url');
         }
 
         if($request->get('created_at_from') != Null && $request->get('created_at_from') != ''){
-            $hotelmaster = $hotelmaster->where('created_at', '>=', Carbon::parse($request->get('created_at_from'))->startOfDay());
+            $hotelmaster = $hotelmaster->where('created_at', '>=', Carbon::parse($request->get('created_at_from'))->startOfDay())->whereNotNull('prop_url');
         }
 
         if($request->get('created_at_to') != Null && $request->get('created_at_to') != ''){
-            $hotelmaster = $hotelmaster->where('created_at', '<=', Carbon::parse($request->get('created_at_to'))->endOfDay());
+            $hotelmaster = $hotelmaster->where('created_at', '<=', Carbon::parse($request->get('created_at_to'))->endOfDay())->whereNotNull('prop_url');
         }
 
         if(count($request->get('countries'))>0){
@@ -77,9 +79,10 @@ class HotelMasterController extends Controller
                 foreach($countries as $key => $country){
                     if($key == 0){
                         $query = $query->where('country', $country);
+                        $query = $query->whereNotNull('prop_url');
                     }else{
-
                         $query = $query->orWhere('country', $country);
+                        $query = $query->whereNotNull('prop_url');
                     }
                 }
                 return $query;
@@ -92,9 +95,10 @@ class HotelMasterController extends Controller
                 foreach($cities as $key => $city){
                     if($key == 0){
                         $query = $query->where('city', $city);
+                        $query = $qurey->whereNotNull('prop_url');
                     }else{
-
                         $query = $query->orWhere('city', $city);
+                        $query= $query->whereNotNull('prop_url');
                     }
                 }
                 return $query;
@@ -107,9 +111,10 @@ class HotelMasterController extends Controller
                 foreach($categories as $key => $category){
                     if($key == 0){
                         $query = $query->where('hotel_category', $category);
+                        $query = $query->whereNotNull('prop_url');
                     }else{
-
                         $query = $query->orWhere('hotel_category', $category);
+                        $query = $query->whereNotNull('prop_url');
                     }
                 }
                 return $query;
@@ -119,11 +124,12 @@ class HotelMasterController extends Controller
         if($request->get('self_verified')!=Null && $request->get('self_verified')!=''){
             $is_verified = $request->get('self_verified');
             if($is_verified == '1'){
-                $hotelmaster = $hotelmaster->Where('self_verified','>',0);
+                $hotelmaster = $hotelmaster->Where('self_verified','>',0)->whereNotNull('prop_url');
             } else if($is_verified == '0'){
                 $hotelmaster = $hotelmaster->where(function ($query) {
                     $query = $query->whereNull('self_verified');
                     $query = $query->orWhere('self_verified','=',0);
+                    $query = $query->whereNotNull('prop_url');
                 });
             }
         }
@@ -131,11 +137,12 @@ class HotelMasterController extends Controller
         if($request->get('guest_favourite')!=Null && $request->get('guest_favourite')!=''){
             $is_favourite = $request->get('guest_favourite');
             if($is_favourite == '1'){
-                $hotelmaster = $hotelmaster->Where('guests_favorite_area','=',1);
+                $hotelmaster = $hotelmaster->Where('guests_favorite_area','=',1)->whereNotNull('prop_url');
             } else if($is_favourite == '0'){
                 $hotelmaster = $hotelmaster->where(function ($query) {
                     $query = $query->whereNull('guests_favorite_area');
                     $query = $query->orWhere('guests_favorite_area','=',0);
+                    $query = $query->whereNotNull('prop_url');
                 });
             }
         }
@@ -165,6 +172,7 @@ class HotelMasterController extends Controller
                 fputcsv($file, $columns_header);
 
                 foreach($hotelmaster_data as $row) {
+	                $row->booking_rating = str_replace('.', ',', $row['booking_rating']);
                     $data_row = [];
                     foreach ($columns as $key) {
                         array_push($data_row, $row->{$key});
@@ -195,8 +203,12 @@ class HotelMasterController extends Controller
         	if($hotelmaster_data[$i]['hotel_name'] != ''){
         		$hotelmaster_data[$i]['hotel_name'] = '<a class="hotel_equip_popup" hotel-id="' . $hotelmaster_data[$i]['hotel_id'] . '" title="hotel equipment" data-title="' . $hotelmaster_data[$i]['hotel_name'] . '">' . $hotelmaster_data[$i]['hotel_name'] . ' <i class="fa fa-info-circle"></i></a>';
         	}
+        	else{
+        		$hotelmaster_data[$i]['hotel_name'] = '<a class="hotel_equip_popup" hotel-id="' . $hotelmaster_data[$i]['hotel_id'] . '" title="hotel equipment" data-title="' . $hotelmaster_data[$i]['prop_url'] . '">' . $hotelmaster_data[$i]['prop_url'] . ' <i class="fa fa-info-circle"></i></a>';
+        	}
 
             $hotelmaster_data[$i]['hotel_id'] = '<a target="_blank" href="' . $hotelmaster_data[$i]['prop_url'] . '" title="View Property">' . $hotelmaster_data[$i]['hotel_id'] . '</a>';
+            $hotelmaster_data[$i]['booking_rating'] = str_replace('.',',', $hotelmaster_data[$i]['booking_rating']);
         }
 
         $json_data = array(

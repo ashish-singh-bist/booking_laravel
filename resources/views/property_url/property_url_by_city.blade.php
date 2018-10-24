@@ -140,9 +140,15 @@
             });
 
             $('#save_urls').on('click',function(e){
-                var urls = $.map(oTable.rows('.selected-row').data(), function (item) {
-                    return item['url']
-                });
+                if($("#select-all").hasClass("allChecked")){
+                    var urls = $.map(oTable.rows().data(), function (item) {
+                        return item['url']
+                    });
+                }else{
+                    var urls = $.map(oTable.rows('.selected-row').data(), function (item) {
+                        return item['url']
+                    });    
+                }
                 var city = $('#city').val();
                 $.ajax({
                     type: "POST",
@@ -169,7 +175,8 @@
               var rows = oTable.rows({ 'search': 'applied' }).nodes();
               // Check/uncheck checkboxes for all rows in the table
               $('input[type="checkbox"]', rows).prop('checked', this.checked);
-           });            
+              $(this).toggleClass('allChecked');
+           });
 
             $('#property-city-table tbody').on( 'click', 'tr input[type="checkbox"]', function () {
                 var row = $(this).closest('tr');

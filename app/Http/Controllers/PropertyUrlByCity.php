@@ -182,11 +182,8 @@ class PropertyUrlByCity extends Controller
                     if(preg_match("/<a[^>]+class\W+[^\"\']*jq_tooltip\W[^>]+>(.+?)<\/a>/is",$str,$tmp_address))
                     {
                         $address=$tmp_address[1];
-                    }
-
-                    
+                    }                    
                 }                
-
 
                 $property['name'] = $name;
                 $property['review_count'] = $review_count;
