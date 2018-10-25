@@ -8,7 +8,7 @@ use Jenssegers\Mongodb\Eloquent\Model as Eloquent;
 class DistinctData extends Eloquent
 {
 	protected $connection = 'mongodb';
-    protected $collection = 'distinct_data';
+    protected $collection = 'master_data';
     protected $primaryKey = '_id';
 
     protected $fillable = [
